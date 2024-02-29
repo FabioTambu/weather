@@ -1,0 +1,13 @@
+.loading-container {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 600px;
+  height: 400px;
+  background-color: rgba(0, 0, 0, 0.3); /* Aggiungi il blur qui */
+  z-index: 9999; /* Assicurati che il loader sia visualizzato sopra gli altri elementi */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

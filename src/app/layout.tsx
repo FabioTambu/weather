@@ -2,6 +2,19 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 
+import { initializeApp } from "firebase/app";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyC-1dJ_o89GlAZQa7dIVXssI6f3H1hICEU",
+  authDomain: "weather-de22a.firebaseapp.com",
+  projectId: "weather-de22a",
+  storageBucket: "weather-de22a.appspot.com",
+  messagingSenderId: "622103952714",
+  appId: "1:622103952714:web:c02768b0afd276d62955b3"
+};
+
+const app = initializeApp(firebaseConfig);
+
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
