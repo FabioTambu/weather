@@ -1,6 +1,7 @@
 import {useEffect, useState} from "react";
 import axios from "axios";
 import {Loading} from "@/components/loading/loading";
+import Image from "next/image";
 
 interface IOutput {
     lat?: number;
@@ -75,9 +76,10 @@ const Output = (props: IOutput) => {
             {data != undefined &&
                 <div>
                     <div>
-                        <h1 onClick={() => {handleBackClick()}}>I</h1>
+                        <h1 onClick={() => {handleBackClick()}}>Back</h1>
                     </div>
                     <div>
+                        <Image unoptimized src={'icon/sun.png'} alt={'weather_image'} width={100} height={100} />
                         <p>Città: {data.city.name}</p>
                         <p>Stato: {data.city.country}</p>
                         <p>Lon: {data.city.coord.lon}</p>
