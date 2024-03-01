@@ -5,12 +5,12 @@ import "./globals.css";
 import { initializeApp } from "firebase/app";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyC-1dJ_o89GlAZQa7dIVXssI6f3H1hICEU",
-  authDomain: "weather-de22a.firebaseapp.com",
-  projectId: "weather-de22a",
-  storageBucket: "weather-de22a.appspot.com",
-  messagingSenderId: "622103952714",
-  appId: "1:622103952714:web:c02768b0afd276d62955b3"
+  apiKey: "AIzaSyBmtGZZRnvIsHDwNRaQ9-H328YOzYrB-F0",
+  authDomain: "weather-6be17.firebaseapp.com",
+  projectId: "weather-6be17",
+  storageBucket: "weather-6be17.appspot.com",
+  messagingSenderId: "812756390786",
+  appId: "1:812756390786:web:5a2c0f705752cc2257f59b"
 };
 
 const app = initializeApp(firebaseConfig);
