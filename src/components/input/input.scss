@@ -30,4 +30,13 @@
 
     }
   }
+
+}
+
+.textfield-container {
+  height: 80px;
+
+  &:first-of-type {
+    height: 90px;
+  }
 }

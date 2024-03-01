@@ -2,36 +2,32 @@
 import './page.scss'
 import {useState} from "react";
 import {Input} from "@/components/input/input";
-import {Loading} from "@/components/loading/loading";
 import {Output} from "@/components/output/output";
 
 export default function Home() {
 
-  const [numberValue, setNumberValue] = useState<string>('');
+  const [city, setCity] = useState<string>('');
   const [showInput, setShowInput] = useState<boolean>(true);
-  const [loading, setLoading] = useState<boolean>(false);
-  const [lon, setLon] = useState<number>(0);
-  const [lat, setLat] = useState<number>(0);
+  const [lon, setLon] = useState<number>();
+  const [lat, setLat] = useState<number>();
 
-  const handleInputChange = (value: string, showInputRectangle: boolean, latitude: number, longitude: number) => {
-    setNumberValue(value);
+  const handleInputChange = (cityValue: string, showInputRectangle: boolean, latitude: string, longitude: string) => {
+    setCity(cityValue);
     setShowInput(showInputRectangle);
-    setLoading(true);
-    setLat(latitude);
-    setLon(longitude);
+    setLat(parseFloat(latitude));
+    setLon(parseFloat(longitude));
   }
 
-  const handleDataFetched = () => {
-    setLoading(false)
+  const handleOutputChange = (showInput: boolean) => {
+    setShowInput(showInput)
   }
 
   return (
       <div className="app-container">
         <div className="app-container__content">
-          {loading && <Loading/>}
           {showInput ?
               <Input onClick={handleInputChange}/> :
-              <Output dataFetched={handleDataFetched}/>
+              <Output onBackClicked={handleOutputChange} city={city} lat={lat} lon={lon}/>
           }
         </div>
       </div>
