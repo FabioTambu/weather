@@ -1,0 +1,52 @@
+.arrow-back-container {
+  position: relative;
+  top: 15px;
+  left: 15px;
+}
+
+.output-component {
+  height: 100%;
+
+  &__content {
+    height: 350px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+}
+
+.output-container {
+  width: 350px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
+  &__city-name {
+    display: flex;
+    justify-content: center;
+  }
+
+  &__coord {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+
+    &__lat {
+      margin-right: 25px;
+    }
+  }
+
+  &__date {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+
+  &__weather {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+}
