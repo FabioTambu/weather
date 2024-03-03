@@ -1,9 +1,3 @@
-.arrow-back-container {
-  position: relative;
-  top: 15px;
-  left: 15px;
-}
-
 .output-component {
   height: 100%;
 
@@ -25,16 +19,7 @@
   &__city-name {
     display: flex;
     justify-content: center;
-  }
-
-  &__coord {
-    display: flex;
-    justify-content: center;
     margin-bottom: 20px;
-
-    &__lat {
-      margin-right: 25px;
-    }
   }
 
   &__date {
@@ -48,5 +33,21 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+
+    & h1 {
+      font-size: 50px;
+    }
+  }
+}
+
+.error-container {
+  height: 80%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  & h1 {
+    color: #b41010;
   }
 }

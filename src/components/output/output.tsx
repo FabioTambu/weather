@@ -5,6 +5,7 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import './output.scss'
 import {DateFormatter} from "@/components/date_formatter/dateFormatter";
 import {WeatherIcon} from "@/components/weather_icon/weatherIcon";
+import {add} from "date-fns";
 
 interface IOutput {
     lat?: number;
@@ -17,6 +18,7 @@ interface IWeatherData {
     city: {
         name: string,
         country: string,
+        timezone: number,
         coord: {
             lat: number,
             lon: number
@@ -43,29 +45,33 @@ const Output = (props: IOutput) => {
 
     const appid = '291cfcdeb83a7cd48d71fb3a81c85f96'
 
+    const [fetchError, setFetchError] = useState<string>('')
+
     const [data, setData] = useState<IWeatherData>();
     const [loading, setLoading] = useState<boolean>(true);
-    const [localTime, setLocalTime] = useState<number>(0);
+    const [localDate, setLocalDate] = useState<string>('');
 
-    let axiosConfig = {};
+    let openWeatherMapConfig = {};
 
     if(props.city != null && props.city != ''){
-        axiosConfig = {
+        openWeatherMapConfig = {
             params: {'appid': appid, 'q': props.city, 'units': 'metric'}
         }
     } else {
-        axiosConfig = {
+        openWeatherMapConfig = {
             params: {'appid': appid, 'lat': props.lat, 'lon': props.lon, 'units': 'metric'}
         }
     }
 
     const fetchData = () => {
-        axios.get('https://api.openweathermap.org/data/2.5/forecast', axiosConfig)
+        axios.get('https://api.openweathermap.org/data/2.5/forecast', openWeatherMapConfig)
             .then((res) => {
-                console.log(res.data);
                 setData(res.data);
-            }).catch((err) => console.log(err));
-
+            }).catch((err) => {
+                console.log(err.message);
+                setFetchError(err.message);
+                setLoading(false);
+        });
     }
 
     useEffect(() => {
@@ -74,25 +80,36 @@ const Output = (props: IOutput) => {
 
     useEffect(() => {
         if(data) {
-            const timeZoneConfig = {
+            const timeZoneDBConfig = {
                 params: {
                     'key': 'D3UTJS4RD6K1',
                     'format': 'json',
                     'by': 'position',
-                    'lat': data!.city.coord.lat,
-                    'lng': data!.city.coord.lon
+                    'fields': 'formatted',
+                    'lat': data.city.coord.lat,
+                    'lng': data.city.coord.lon
                 }
             }
 
-            axios.get('https://api.timezonedb.com/v2.1/get-time-zone', timeZoneConfig)
-                .then((res) => {
-                    setLocalTime(Math.floor(parseInt(res.data.formatted.substring(11, 13)) / 3));
+            axios.get('https://api.timezonedb.com/v2.1/get-time-zone', timeZoneDBConfig).then((res) => {
+                console.log(res.data.formatted)
 
-                    setLoading(false);
-                })
-                .catch((err) => {
-                    console.error(err);
-                });
+                const fetchedLocalDate = res.data.formatted.slice(0, -6);
+
+                let tempLocalTime = Math.ceil(parseInt(fetchedLocalDate.substring(11)) / 3) * 3;
+
+                let tempLocalDate = fetchedLocalDate.substring(0, 10)
+
+                if(tempLocalTime == 0) {
+                    tempLocalTime = 3;
+                } else if(tempLocalTime == 24) {
+                    tempLocalTime = 0;
+                    const newDate = add(new Date(tempLocalDate), { days: 1 });
+                    tempLocalDate = newDate.toISOString().split('T')[0];
+                }
+                setLocalDate(tempLocalDate + ' ' + tempLocalTime);
+
+            })
         }
     }, [data]);
 
@@ -100,42 +117,44 @@ const Output = (props: IOutput) => {
         props.onBackClicked!(true)
     }
 
+    useEffect(() => {
+        if(localDate != '') {
+            setLoading(false);
+        }
+    }, [localDate]);
+
     return(
 
         <div className="output-component">
             {loading && <Loading/>}
-            {data != undefined &&
                 <>
-                    <div className="arrow-back-container">
-                        <ArrowBackIcon onClick={() => {handleBackClick()}}/>
-                    </div>
-                    <div className="output-component__content">
-                        <div className="output-container">
-                            <div className="output-container__city-name">
-                            {data.city.name == '' ? <h1>Unknown</h1> : <h1>{data.city.name}, {data.city.country}</h1>}
-                            </div>
-                            <div className="output-container__coord">
-                                <div className="output-container__coord__lat">
-                                    <span>Lon: {data.city.coord.lon.toFixed(2)}</span>
-                                </div>
-                                <span>Lat: {data.city.coord.lat.toFixed(2)}</span>
-                            </div>
-                            <div className="output-container__date">
-                                <DateFormatter date={data.list[localTime].dt_txt.substring(0, 10)}/>
-                                <p>{data.list[localTime].dt_txt.substring(11, 16)}</p>
-                            </div>
-                            <div className="output-container__weather">
-                                <WeatherIcon weather={data.list[localTime].weather[0].icon}/>
-                                <p>{data.list[localTime].weather[0].description}</p>
-                                <h1>{Math.round(data.list[localTime].main.temp)}°</h1>
-                            </div>
+                    <ArrowBackIcon onClick={() => {handleBackClick()}}/>
+                    {
+                        fetchError != '' ? <div className="error-container"><h1>Errore:</h1><h3>{fetchError}</h3></div> :
 
-                        </div>
-                    </div>
+                            data != undefined &&
+
+                                <div className="output-component__content">
+                                    <div className="output-container">
+                                        <div className="output-container__city-name">
+                                            {data.city.name == '' ? <h1>Unknown City</h1> :
+                                                <h1>{data.city.name}, {data.city.country}</h1>}
+                                        </div>
+                                        <div className="output-container__date">
+                                            <DateFormatter date={localDate!.substring(0, 10)} time={localDate!.substring(11, 13)}/>
+                                        </div>
+                                        <div className="output-container__weather">
+                                            <WeatherIcon weather={data.list[0].weather[0].icon}/>
+                                            <h1>{Math.round(data.list[0].main.temp)}°</h1>
+                                        </div>
+
+                                    </div>
+                                </div>
+
+                    }
                 </>
-            }
         </div>
     )
 }
 
-export {Output }
+export {Output}

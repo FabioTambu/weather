@@ -67,50 +67,55 @@ const Input = (props: IInput) => {
                     <p>Coordinates</p>
                 </div>
             </div>
-            { howToSearch == 'city' ?
-                <>
-                    <h1>Inserisci il nome della tua città</h1>
-                    <TextField
-                        id="city-name"
-                        label="Enter the city name"
-                        variant="outlined"
-                        value={city}
-                        onChange={(event: React.ChangeEvent<HTMLInputElement>) => {setCity(event.target.value)}}
-                    />
-                </> :
-                <>
-                    <h1>Inserisci le coordinate</h1>
-                    <div>
-                        <div className="textfield-container">
-                            <TextField
-                                id="lat"
-                                label="Enter the latitude"
-                                variant="outlined"
-                                type="number"
-                                value={lat}
-                                error={latError != undefined}
-                                helperText={latError}
-                                onChange={(event: React.ChangeEvent<HTMLInputElement>) => {setLat(event.target.value)}}
-                            />
+            <div className="input-container__content">
+                { howToSearch == 'city' ?
+                    <>
+                        <h1>Inserisci la città</h1>
+                        <TextField
+                            id="city-name"
+                            label="Enter the city name"
+                            variant="outlined"
+                            color="primary"
+                            value={city}
+                            onChange={(event: React.ChangeEvent<HTMLInputElement>) => {setCity(event.target.value)}}
+                        />
+                    </> :
+                    <>
+                        <h1>Inserisci le coordinate</h1>
+                        <div>
+                            <div className="textfield-container">
+                                <TextField
+                                    id="lat"
+                                    label="Enter the latitude"
+                                    variant="outlined"
+                                    color="primary"
+                                    type="number"
+                                    value={lat}
+                                    error={latError != undefined}
+                                    helperText={latError}
+                                    onChange={(event: React.ChangeEvent<HTMLInputElement>) => {setLat(event.target.value)}}
+                                />
+                            </div>
+                            <div className="textfield-container">
+                                <TextField
+                                    id="lon"
+                                    label="Enter the longitude"
+                                    variant="outlined"
+                                    color="primary"
+                                    type="number"
+                                    value={lon}
+                                    error={lonError != undefined}
+                                    helperText={lonError}
+                                    onChange={(event: React.ChangeEvent<HTMLInputElement>) => {setLon(event.target.value)}}
+                                />
+                            </div>
                         </div>
-                        <div className="textfield-container">
-                            <TextField
-                                id="lon"
-                                label="Enter the longitude"
-                                variant="outlined"
-                                type="number"
-                                value={lon}
-                                error={lonError != undefined}
-                                helperText={lonError}
-                                onChange={(event: React.ChangeEvent<HTMLInputElement>) => {setLon(event.target.value)}}
-                            />
-                        </div>
-                    </div>
-                </>
-            }
-            <Button variant="outlined" onClick={() => {
-                handleButtonClicked()
-            }}>Invia</Button>
+                    </>
+                }
+            </div>
+            <div className="send-button">
+                <Button variant="outlined" onClick={() => {handleButtonClicked()}}>Invia</Button>
+            </div>
         </div>
     )
 }

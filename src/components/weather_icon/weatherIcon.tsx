@@ -25,7 +25,7 @@ const WeatherIcon = (props: IWeatherIcon) => {
     }, []);
 
     return (
-        <Image unoptimized src={`icon/${weatherIcon}.png`} alt={'weather_image'} width={100} height={100}/>
+        <Image unoptimized src={`icon/${weatherIcon}.png`} alt={'weather_image'} width={130} height={130}/>
     )
 }
 
