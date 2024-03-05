@@ -6,80 +6,42 @@ import './output.scss'
 import {DateFormatter} from "@/components/date_formatter/dateFormatter";
 import {WeatherIcon} from "@/components/weather_icon/weatherIcon";
 import {add} from "date-fns";
+import {IHandleSearch, IWeatherData, weatherPayload} from "@/types/interfaces";
 
-interface IOutput {
-    lat?: number;
-    lon?: number;
-    city?: string;
-    onBackClicked?: (showInput: boolean) => void;
-}
+const appid = process.env.NEXT_PUBLIC_WEATHER_API_KEY;
 
-interface IWeatherData {
-    city: {
-        name: string,
-        country: string,
-        timezone: number,
-        coord: {
-            lat: number,
-            lon: number
-        }
-    }
-    list: [
-        {
-            dt_txt: string,
-            main: {
-                temp: number
-            }
-            weather: [
-                {
-                    main: string,
-                    description: string,
-                    icon: string
-                }
-            ]
-        }
-    ];
-}
 
-const Output = (props: IOutput) => {
-
-    const appid = '291cfcdeb83a7cd48d71fb3a81c85f96'
-
+const Output = (props: IHandleSearch & { onBackClicked?: (showInput: boolean) => void }) => {
     const [fetchError, setFetchError] = useState<string>('')
-
     const [data, setData] = useState<IWeatherData>();
     const [loading, setLoading] = useState<boolean>(true);
     const [localDate, setLocalDate] = useState<string>('');
 
-    let openWeatherMapConfig = {};
+    useEffect(() => {
+        let weatherPayload: weatherPayload = {params: {}}
+        if (props.type == 'city')
+            weatherPayload = {params: {'appid': appid, 'q': props.city, 'units': 'metric'}}
+        if (props.type == 'coordinates')
+            weatherPayload = {params: {'appid': appid, 'lat': props.lat, 'lon': props.lon, 'units': 'metric'}}
 
-    if(props.city != null && props.city != ''){
-        openWeatherMapConfig = {
-            params: {'appid': appid, 'q': props.city, 'units': 'metric'}
-        }
-    } else {
-        openWeatherMapConfig = {
-            params: {'appid': appid, 'lat': props.lat, 'lon': props.lon, 'units': 'metric'}
-        }
-    }
+        fetchData(weatherPayload);
+    }, []);
 
-    const fetchData = () => {
-        axios.get('https://api.openweathermap.org/data/2.5/forecast', openWeatherMapConfig)
+    const fetchData = (payload: weatherPayload) => {
+        axios.get('https://api.openweathermap.org/data/2.5/forecast', payload)
             .then((res) => {
                 setData(res.data);
-            }).catch((err) => {
+                // TODO: chiama una nuova funzione per timezonedb passandogli in props res.data (setta comunque setData prima)
+            })
+            .catch((err) => {
                 console.log(err.message);
                 setFetchError(err.message);
                 setLoading(false);
-        });
+            });
     }
 
     useEffect(() => {
-        fetchData();
-    }, []);
-
-    useEffect(() => {
-        if(data) {
+        if (data) {
             const timeZoneDBConfig = {
                 params: {
                     'key': 'D3UTJS4RD6K1',
@@ -100,11 +62,11 @@ const Output = (props: IOutput) => {
 
                 let tempLocalDate = fetchedLocalDate.substring(0, 10)
 
-                if(tempLocalTime == 0) {
+                if (tempLocalTime == 0) {
                     tempLocalTime = 3;
-                } else if(tempLocalTime == 24) {
+                } else if (tempLocalTime == 24) {
                     tempLocalTime = 0;
-                    const newDate = add(new Date(tempLocalDate), { days: 1 });
+                    const newDate = add(new Date(tempLocalDate), {days: 1});
                     tempLocalDate = newDate.toISOString().split('T')[0];
                 }
                 setLocalDate(tempLocalDate + ' ' + tempLocalTime);
@@ -118,41 +80,44 @@ const Output = (props: IOutput) => {
     }
 
     useEffect(() => {
-        if(localDate != '') {
+        if (localDate != '') {
             setLoading(false);
         }
     }, [localDate]);
 
-    return(
+    return (
 
         <div className="output-component">
             {loading && <Loading/>}
-                <>
-                    <ArrowBackIcon onClick={() => {handleBackClick()}}/>
-                    {
-                        fetchError != '' ? <div className="error-container"><h1>Errore:</h1><h3>{fetchError}</h3></div> :
+            <>
+                <ArrowBackIcon onClick={() => {
+                    handleBackClick()
+                }}/>
+                {
+                    fetchError != '' ? <div className="error-container"><h1>Errore:</h1><h3>{fetchError}</h3></div> :
 
-                            data != undefined &&
+                        data != undefined &&
 
-                                <div className="output-component__content">
-                                    <div className="output-container">
-                                        <div className="output-container__city-name">
-                                            {data.city.name == '' ? <h1>Unknown City</h1> :
-                                                <h1>{data.city.name}, {data.city.country}</h1>}
-                                        </div>
-                                        <div className="output-container__date">
-                                            <DateFormatter date={localDate!.substring(0, 10)} time={localDate!.substring(11, 13)}/>
-                                        </div>
-                                        <div className="output-container__weather">
-                                            <WeatherIcon weather={data.list[0].weather[0].icon}/>
-                                            <h1>{Math.round(data.list[0].main.temp)}°</h1>
-                                        </div>
-
-                                    </div>
+                        <div className="output-component__content">
+                            <div className="output-container">
+                                <div className="output-container__city-name">
+                                    {data.city.name == '' ? <h1>Unknown City</h1> :
+                                        <h1>{data.city.name}, {data.city.country}</h1>}
+                                </div>
+                                <div className="output-container__date">
+                                    <DateFormatter date={localDate!.substring(0, 10)}
+                                                   time={localDate!.substring(11, 13)}/>
+                                </div>
+                                <div className="output-container__weather">
+                                    <WeatherIcon weather={data.list[0].weather[0].icon}/>
+                                    <h1>{Math.round(data.list[0].main.temp)}°</h1>
                                 </div>
 
-                    }
-                </>
+                            </div>
+                        </div>
+
+                }
+            </>
         </div>
     )
 }

@@ -1,36 +1,30 @@
 import './input.scss'
 import {Button, Divider, TextField} from "@mui/material";
 import React, {useEffect, useState} from "react";
+import {IHandleSearch, TSearchType} from "@/types/interfaces";
 
-interface IInput {
-    onClick?: (city: string, showInput: boolean, lat: string, lon: string) => void;
-}
-
-const Input = (props: IInput) => {
+const Input = ({onClick}: { onClick: (props: IHandleSearch) => void }) => {
 
     const [city, setCity] = useState<string>('')
-
-    const [lat, setLat] = useState<string>('');
-    const [lon, setLon] = useState<string>('');
+    const [lat, setLat] = useState<number>(0);
+    const [lon, setLon] = useState<number>(0);
     const [latError, setLatError] = useState<string | undefined>()
     const [lonError, setLonError] = useState<string | undefined>()
 
-    const [howToSearch, setHowToSearch] = useState<'city' | 'coordinates'>('city')
+    const [howToSearch, setHowToSearch] = useState<TSearchType>('city')
 
     const handleButtonClicked = () => {
-
-        if(latError == undefined && lonError == undefined) {
+        if (latError == undefined && lonError == undefined) {
             console.log('Entrato')
-            props.onClick!(city, false, lat, lon);
+            onClick!({city, lat, lon, type: howToSearch});
         }
-
     }
 
     useEffect(() => {
-        if(parseFloat(lat!) > 90) {
+        if (lat > 90) {
             setLatError('Latitudine Troppo Grande')
             console.log('Latitudine Troppo Grande')
-        } else if (parseFloat(lat!) < -90) {
+        } else if (lat < -90) {
             setLatError('Latitudine Troppo Piccola')
             console.log('Latitudine Troppo Piccola')
         } else {
@@ -39,10 +33,10 @@ const Input = (props: IInput) => {
     }, [lat]);
 
     useEffect(() => {
-        if(parseFloat(lon!) > 180) {
+        if (lon > 180) {
             setLonError('Longitudine Troppo Grande')
             console.log('Longitudine Troppo Grande')
-        } else if (parseFloat(lon!) < -180) {
+        } else if (lon < -180) {
             setLonError('Longitudine Troppo Piccola')
             console.log('Longitudine Troppo Piccola')
         } else {
@@ -53,22 +47,26 @@ const Input = (props: IInput) => {
     const handleChangeHowToSearch = (typeOfSearch: 'city' | 'coordinates') => {
         setHowToSearch(typeOfSearch);
         setCity('');
-        setLat('');
-        setLon('');
+        setLat(0);
+        setLon(0);
     }
 
     return (
         <div className="input-container">
             <div className="input-container__how-to-search">
-                <div className="input-container__how-to-search__case" onClick={() => {handleChangeHowToSearch('city')}}>
+                <div className="input-container__how-to-search__case" onClick={() => {
+                    handleChangeHowToSearch('city')
+                }}>
                     <p>City</p>
                 </div>
-                <div className="input-container__how-to-search__case" onClick={() => {handleChangeHowToSearch('coordinates')}}>
+                <div className="input-container__how-to-search__case" onClick={() => {
+                    handleChangeHowToSearch('coordinates')
+                }}>
                     <p>Coordinates</p>
                 </div>
             </div>
             <div className="input-container__content">
-                { howToSearch == 'city' ?
+                {howToSearch == 'city' ?
                     <>
                         <h1>Inserisci la città</h1>
                         <TextField
@@ -77,7 +75,9 @@ const Input = (props: IInput) => {
                             variant="outlined"
                             color="primary"
                             value={city}
-                            onChange={(event: React.ChangeEvent<HTMLInputElement>) => {setCity(event.target.value)}}
+                            onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                                setCity(event.target.value)
+                            }}
                         />
                     </> :
                     <>
@@ -93,7 +93,9 @@ const Input = (props: IInput) => {
                                     value={lat}
                                     error={latError != undefined}
                                     helperText={latError}
-                                    onChange={(event: React.ChangeEvent<HTMLInputElement>) => {setLat(event.target.value)}}
+                                    onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+                                        setLat(parseFloat(event.target.value))
+                                    }
                                 />
                             </div>
                             <div className="textfield-container">
@@ -106,7 +108,9 @@ const Input = (props: IInput) => {
                                     value={lon}
                                     error={lonError != undefined}
                                     helperText={lonError}
-                                    onChange={(event: React.ChangeEvent<HTMLInputElement>) => {setLon(event.target.value)}}
+                                    onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+                                        setLon(parseFloat(event.target.value))
+                                    }
                                 />
                             </div>
                         </div>
@@ -114,7 +118,9 @@ const Input = (props: IInput) => {
                 }
             </div>
             <div className="send-button">
-                <Button variant="outlined" onClick={() => {handleButtonClicked()}}>Invia</Button>
+                <Button variant="outlined" onClick={() => {
+                    handleButtonClicked()
+                }}>Invia</Button>
             </div>
         </div>
     )
