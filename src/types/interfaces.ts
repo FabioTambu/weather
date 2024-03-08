@@ -30,7 +30,7 @@ export interface IWeatherData {
     }
     list: [
         {
-            dt_txt: string,
+            dt: number,
             main: {
                 temp: number
             }

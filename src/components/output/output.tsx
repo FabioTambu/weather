@@ -5,7 +5,7 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import './output.scss'
 import {DateFormatter} from "@/components/date_formatter/dateFormatter";
 import {WeatherIcon} from "@/components/weather_icon/weatherIcon";
-import {add} from "date-fns";
+import {format} from "date-fns";
 import {IHandleSearch, IWeatherData, weatherPayload} from "@/types/interfaces";
 
 const appid = process.env.NEXT_PUBLIC_WEATHER_API_KEY;
@@ -31,7 +31,11 @@ const Output = (props: IHandleSearch & { onBackClicked?: (showInput: boolean) =>
         axios.get('https://api.openweathermap.org/data/2.5/forecast', payload)
             .then((res) => {
                 setData(res.data);
-                // TODO: chiama una nuova funzione per timezonedb passandogli in props res.data (setta comunque setData prima)
+                calculateLocalTime(res.data);
+                setTimeout(() => {
+                    setLoading(false)
+                }, 1000);
+                console.log(res.data)
             })
             .catch((err) => {
                 console.log(err.message);
@@ -40,50 +44,15 @@ const Output = (props: IHandleSearch & { onBackClicked?: (showInput: boolean) =>
             });
     }
 
-    useEffect(() => {
-        if (data) {
-            const timeZoneDBConfig = {
-                params: {
-                    'key': 'D3UTJS4RD6K1',
-                    'format': 'json',
-                    'by': 'position',
-                    'fields': 'formatted',
-                    'lat': data.city.coord.lat,
-                    'lng': data.city.coord.lon
-                }
-            }
-
-            axios.get('https://api.timezonedb.com/v2.1/get-time-zone', timeZoneDBConfig).then((res) => {
-                console.log(res.data.formatted)
-
-                const fetchedLocalDate = res.data.formatted.slice(0, -6);
-
-                let tempLocalTime = Math.ceil(parseInt(fetchedLocalDate.substring(11)) / 3) * 3;
-
-                let tempLocalDate = fetchedLocalDate.substring(0, 10)
-
-                if (tempLocalTime == 0) {
-                    tempLocalTime = 3;
-                } else if (tempLocalTime == 24) {
-                    tempLocalTime = 0;
-                    const newDate = add(new Date(tempLocalDate), {days: 1});
-                    tempLocalDate = newDate.toISOString().split('T')[0];
-                }
-                setLocalDate(tempLocalDate + ' ' + tempLocalTime);
-
-            })
-        }
-    }, [data]);
-
-    const handleBackClick = () => {
-        props.onBackClicked!(true)
+    const calculateLocalTime = (fetchedData: any) => {
+        const tempDate = new Date(fetchedData.list[0].dt * 1000);
+        setLocalDate(format(tempDate, 'MM-dd-yyyy HH:mm')); // TODO: Convertire orario da UTC a ora locale
     }
 
-    useEffect(() => {
-        if (localDate != '') {
-            setLoading(false);
-        }
-    }, [localDate]);
+    const handleBackClick = () => {
+
+        props.onBackClicked!(true);
+    }
 
     return (
 
@@ -94,8 +63,7 @@ const Output = (props: IHandleSearch & { onBackClicked?: (showInput: boolean) =>
                     handleBackClick()
                 }}/>
                 {
-                    fetchError != '' ? <div className="error-container"><h1>Errore:</h1><h3>{fetchError}</h3></div> :
-
+                    fetchError != '' ? <div className="error-container"><h1>Si é verificato un errore</h1></div> :
                         data != undefined &&
 
                         <div className="output-component__content">
