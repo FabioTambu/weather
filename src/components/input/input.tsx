@@ -20,30 +20,6 @@ const Input = ({onClick}: { onClick: (props: IHandleSearch) => void }) => {
         }
     }
 
-    useEffect(() => {
-        if (lat > 90) {
-            setLatError('Latitudine Troppo Grande')
-            console.log('Latitudine Troppo Grande')
-        } else if (lat < -90) {
-            setLatError('Latitudine Troppo Piccola')
-            console.log('Latitudine Troppo Piccola')
-        } else {
-            setLatError(undefined)
-        }
-    }, [lat]);
-
-    useEffect(() => {
-        if (lon > 180) {
-            setLonError('Longitudine Troppo Grande')
-            console.log('Longitudine Troppo Grande')
-        } else if (lon < -180) {
-            setLonError('Longitudine Troppo Piccola')
-            console.log('Longitudine Troppo Piccola')
-        } else {
-            setLonError(undefined)
-        }
-    }, [lon]);
-
     const handleChangeHowToSearch = (typeOfSearch: 'city' | 'coordinates') => {
         setHowToSearch(typeOfSearch);
         setCity('');
@@ -93,9 +69,17 @@ const Input = ({onClick}: { onClick: (props: IHandleSearch) => void }) => {
                                     value={lat}
                                     error={latError != undefined}
                                     helperText={latError}
-                                    onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
-                                        setLat(parseFloat(event.target.value))
-                                    }
+                                    onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                                        setLat(parseFloat(event.target.value));
+
+                                        if (lat > 90) {
+                                            setLatError('Numero Troppo Grande')
+                                        } else if (lat < -90) {
+                                            setLatError('Numero Troppo Piccolo')
+                                        } else {
+                                            setLatError(undefined)
+                                        }
+                                    }}
                                 />
                             </div>
                             <div className="textfield-container">
@@ -108,9 +92,16 @@ const Input = ({onClick}: { onClick: (props: IHandleSearch) => void }) => {
                                     value={lon}
                                     error={lonError != undefined}
                                     helperText={lonError}
-                                    onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
-                                        setLon(parseFloat(event.target.value))
-                                    }
+                                    onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                                        setLon(parseFloat(event.target.value));
+                                        if (lon > 180) {
+                                            setLonError('Numero Troppo Grande')
+                                        } else if (lon < -180) {
+                                            setLonError('Numero Troppo Piccolo')
+                                        } else {
+                                            setLonError(undefined)
+                                        }
+                                    }}
                                 />
                             </div>
                         </div>
