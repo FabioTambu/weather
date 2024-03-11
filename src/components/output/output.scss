@@ -26,10 +26,24 @@ $swiper-height: 120px;
       &__slide {
         height: 100%;
         display: flex;
-        justify-content: center;
+        flex-direction: column;
+        justify-content: space-evenly;
         align-items: center;
         background-color: rgba(0, 0, 0, 0.2);
         border-radius: 10px;
+
+        & p {
+          font-size: 14px;
+          font-weight: bold;
+
+          &:first-of-type {
+            font-size: 16px;
+          }
+
+          &:last-of-type {
+            font-size: 18px;
+          }
+        }
       }
     }
   }
@@ -41,3 +55,16 @@ $swiper-height: 120px;
   right: 15px;
   bottom: 5px;
 }
+
+.error-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  color: #b41010;
+}
+
+#date {
+  color: rgba(255, 255, 255, 0.5);
+}
+

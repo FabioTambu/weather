@@ -1,12 +1,10 @@
 import Image from "next/image";
 import {useEffect, useState} from "react";
-
-interface IWeatherIcon {
-    weather: string
-}
+import {IWeatherIcon} from "@/types/interfaces";
 
 const WeatherIcon = (props: IWeatherIcon) => {
     const [weatherIcon, setWeatherIcon] = useState<string>()
+    const [imageDimension, setImageDimension] = useState<number>(0)
 
     useEffect(() => {
         if(props.weather == '03d' || props.weather == '03n' || props.weather == '04d' || props.weather == '04n') {
@@ -22,10 +20,18 @@ const WeatherIcon = (props: IWeatherIcon) => {
         } else {
             setWeatherIcon(props.weather)
         }
+
+        if(props.size == 'large') {
+            setImageDimension(130)
+        } else {
+            setImageDimension(40)
+        }
     }, []);
 
+
+
     return (
-        <Image unoptimized src={`icon/${weatherIcon}.png`} alt={'weather_image'} width={130} height={130}/>
+        <Image unoptimized src={`icon/${weatherIcon}.png`} alt={'weather_image'} width={imageDimension} height={imageDimension}/>
     )
 }
 

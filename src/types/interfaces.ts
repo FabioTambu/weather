@@ -17,6 +17,10 @@ export interface IHandleSearch {
     type: TSearchType
 }
 
+export interface IWeatherIcon {
+    weather: string,
+    size: 'large' | 'small'
+}
 
 export interface IWeatherData {
     city: {
@@ -30,7 +34,7 @@ export interface IWeatherData {
     }
     list: [
         {
-            dt: number,
+            dt_txt: string,
             main: {
                 temp: number
             }

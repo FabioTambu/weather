@@ -1,26 +1,26 @@
-import {useEffect, useState} from "react";
 import axios from "axios";
-import {Loading} from "@/components/loading/loading";
+import { useEffect, useState } from "react";
+import { IconButton } from "@mui/material";
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import './output.scss'
-import {DateFormatter} from "@/components/date_formatter/dateFormatter";
-import {WeatherIcon} from "@/components/weather_icon/weatherIcon";
-import {format} from "date-fns";
-import {IHandleSearch, IWeatherData, weatherPayload} from "@/types/interfaces";
+import {Loading} from "@/components/loading/loading";
+import { WeatherIcon } from "@/components/weather_icon/weatherIcon";
+import { CalculateTime } from "@/components/calculateTime/calculateTime";
+import { DateFormatter } from "@/components/date_formatter/dateFormatter";
+import { IHandleSearch, IWeatherData, weatherPayload} from "@/types/interfaces";
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { FreeMode } from 'swiper/modules';
 import 'swiper/css';
 import 'swiper/css/free-mode';
-import {IconButton} from "@mui/material";
+import './output.scss'
 
 const appid = process.env.NEXT_PUBLIC_WEATHER_API_KEY;
 
 
 const Output = (props: IHandleSearch & { onBackClicked?: (showInput: boolean) => void }) => {
-    const [fetchError, setFetchError] = useState<string>('')
     const [data, setData] = useState<IWeatherData>();
     const [loading, setLoading] = useState<boolean>(true);
-    const [localDate, setLocalDate] = useState<string>('');
+    const [localTimezone, setLocalTimezone] = useState<number>(0);
+    const [error, setError] = useState(false)
 
     useEffect(() => {
         let weatherPayload: weatherPayload = {params: {}}
@@ -36,22 +36,15 @@ const Output = (props: IHandleSearch & { onBackClicked?: (showInput: boolean) =>
         axios.get('https://api.openweathermap.org/data/2.5/forecast', payload)
             .then((res) => {
                 setData(res.data);
-                calculateLocalTime(res.data);
+                setLocalTimezone(res.data.city.timezone)
                 setTimeout(() => {
                     setLoading(false)
                 }, 1000);
-                console.log(res.data)
             })
-            .catch((err) => {
-                console.log(err.message);
-                setFetchError(err.message);
+            .catch(() => {
+                setError(true);
                 setLoading(false);
             });
-    }
-
-    const calculateLocalTime = (fetchedData: any) => {
-        const tempDate = new Date(fetchedData.list[0].dt * 1000);
-        setLocalDate(format(tempDate, 'MM-dd-yyyy HH:mm')); // TODO: Convertire orario da UTC a ora locale
     }
 
     const handleBackClick = () => {
@@ -60,84 +53,54 @@ const Output = (props: IHandleSearch & { onBackClicked?: (showInput: boolean) =>
     }
 
     return (
-
-        // TODO: aggiungere il loading
-
-        data != undefined &&
-
         <>
+        {loading && <Loading/>}
+
             <div className='icon-container'>
                 <IconButton color='inherit' onClick={() => {handleBackClick()}}>
                     <ArrowBackIcon/>
                 </IconButton>
             </div>
 
+            {error && <div className='error-container'><h1>Si é verificato un errore</h1></div>}
+
+            {data != undefined &&
+
             <div className="output_container">
                 <div className="output-container__present-content">
                     {data.city.name == '' ? <h1>Unknown City</h1> : <h1>{data.city.name}, {data.city.country}</h1>}
-                    <DateFormatter date={localDate!.substring(0, 10)} time={localDate!.substring(11, 13)}/>
-                    <WeatherIcon weather={data.list[0].weather[0].icon}/>
+
+                    <h2 id="date">
+                        {CalculateTime(data.list[0].dt_txt, localTimezone).substring(11) + ', '}
+                        {DateFormatter(CalculateTime(data.list[0].dt_txt, localTimezone).substring(0, 10), 'long')}
+                    </h2>
+                    <WeatherIcon weather={data.list[0].weather[0].icon} size='large'/>
                     <h1>{Math.round(data.list[0].main.temp)}°</h1>
                 </div>
 
-                <div className="output-container__future-content">
+                <div className="output-container__future-content" style={{cursor: 'grab'}}>
                     <Swiper
-                        slidesPerView={5}
+                        slidesPerView={4.5}
                         spaceBetween={30}
                         freeMode={true}
-                        modules={[FreeMode]}
+                        modules={[ FreeMode ]}
                         className="output-container__future-content__swiper"
                     >
-                        {//TODO: i SwiperSlide devono essere fatti con un data.map
-                        }
-                        <SwiperSlide>
-                            <div className="output-container__future-content__swiper__slide">
-                                <p>Prova 1</p>
-                            </div>
-                        </SwiperSlide>
-                        <SwiperSlide>
-                            <div className="output-container__future-content__swiper__slide">
-                                <p>Prova 2</p>
-                            </div>
-                        </SwiperSlide>
-                        <SwiperSlide>
-                            <div className="output-container__future-content__swiper__slide">
-                                <p>Prova 3</p>
-                            </div>
-                        </SwiperSlide>
-                        <SwiperSlide>
-                            <div className="output-container__future-content__swiper__slide">
-                                <p>Prova 4</p>
-                            </div>
-                        </SwiperSlide>
-                        <SwiperSlide>
-                            <div className="output-container__future-content__swiper__slide">
-                                <p>Prova 5</p>
-                            </div>
-                        </SwiperSlide>
-                        <SwiperSlide>
-                            <div className="output-container__future-content__swiper__slide">
-                                <p>Prova 6</p>
-                            </div>
-                        </SwiperSlide>
-                        <SwiperSlide>
-                            <div className="output-container__future-content__swiper__slide">
-                                <p>Prova 7</p>
-                            </div>
-                        </SwiperSlide>
-                        <SwiperSlide>
-                            <div className="output-container__future-content__swiper__slide">
-                                <p>Prova 8</p>
-                            </div>
-                        </SwiperSlide>
-                        <SwiperSlide>
-                            <div className="output-container__future-content__swiper__slide">
-                                <p>Prova 9</p>
-                            </div>
-                        </SwiperSlide>
+                        {data.list.map((item, index) => (
+                            index != 0 &&
+                            <SwiperSlide key={index}>
+                                <div className="output-container__future-content__swiper__slide">
+                                    <p>{CalculateTime(item.dt_txt, localTimezone).substring(11)}</p>
+                                    <p id="date">{DateFormatter(CalculateTime(item.dt_txt, localTimezone).substring(0, 10), 'short')}</p>
+                                    <WeatherIcon weather={item.weather[0].icon} size='small'/>
+                                    <p>{Math.round(item.main.temp)}°</p>
+                                </div>
+                            </SwiperSlide>
+                        ))}
                     </Swiper>
                 </div>
             </div>
+            }
         </>
     )
 }
