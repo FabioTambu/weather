@@ -20,6 +20,14 @@ $swiper-height: 120px;
     margin-top: 10px;
     height: $swiper-height;
 
+    &:hover {
+      cursor: grab;
+    }
+
+    &:active {
+      cursor: grabbing;
+    }
+
     &__swiper {
       height: $swiper-height;
 
@@ -31,6 +39,7 @@ $swiper-height: 120px;
         align-items: center;
         background-color: rgba(0, 0, 0, 0.2);
         border-radius: 10px;
+        user-select: none;
 
         & p {
           font-size: 14px;
@@ -49,7 +58,7 @@ $swiper-height: 120px;
   }
 }
 
-.icon-container {
+.back-icon-container {
   height: 0;
   position: relative;
   right: 15px;

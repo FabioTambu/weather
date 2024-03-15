@@ -10,6 +10,16 @@ export interface weatherPayload {
     params: any // TODO: tipizza
 }
 
+export interface ICustomTextField {
+    id: string;
+    label: string;
+    type: 'number' | 'string';
+    value: string | number;
+    error?: string | undefined;
+    maxNumberValue?: number;
+    onClick: (props: { value: string; errorValue?: string | undefined}) => void
+}
+
 export interface IHandleSearch {
     city?: string,
     lat?: number,

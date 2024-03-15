@@ -56,7 +56,7 @@ const Output = (props: IHandleSearch & { onBackClicked?: (showInput: boolean) =>
         <>
         {loading && <Loading/>}
 
-            <div className='icon-container'>
+            <div className='back-icon-container'>
                 <IconButton color='inherit' onClick={() => {handleBackClick()}}>
                     <ArrowBackIcon/>
                 </IconButton>
@@ -78,7 +78,7 @@ const Output = (props: IHandleSearch & { onBackClicked?: (showInput: boolean) =>
                     <h1>{Math.round(data.list[0].main.temp)}°</h1>
                 </div>
 
-                <div className="output-container__future-content" style={{cursor: 'grab'}}>
+                <div className="output-container__future-content">
                     <Swiper
                         slidesPerView={4.5}
                         spaceBetween={30}

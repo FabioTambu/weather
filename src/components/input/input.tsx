@@ -1,7 +1,9 @@
 import './input.scss'
-import {Button, Divider, TextField} from "@mui/material";
-import React, {useEffect, useState} from "react";
+import {Button, IconButton, TextField} from "@mui/material";
+import React, { useState} from "react";
 import {IHandleSearch, TSearchType} from "@/types/interfaces";
+import InfoIcon from '@mui/icons-material/Info';
+import {CustomTextField} from "@/components/customTextfield/custom-textfield";
 
 const Input = ({onClick}: { onClick: (props: IHandleSearch) => void }) => {
 
@@ -15,7 +17,6 @@ const Input = ({onClick}: { onClick: (props: IHandleSearch) => void }) => {
 
     const handleButtonClicked = () => {
         if (latError == undefined && lonError == undefined) {
-            console.log('Entrato')
             onClick!({city, lat, lon, type: howToSearch});
         }
     }
@@ -28,92 +29,75 @@ const Input = ({onClick}: { onClick: (props: IHandleSearch) => void }) => {
     }
 
     return (
-        <div className="input-container">
-            <div className="input-container__how-to-search">
-                <div className="input-container__how-to-search__case" onClick={() => {
-                    handleChangeHowToSearch('city')
-                }}>
-                    <p>City</p>
-                </div>
-                <div className="input-container__how-to-search__case" onClick={() => {
-                    handleChangeHowToSearch('coordinates')
-                }}>
-                    <p>Coordinates</p>
-                </div>
+        <>
+            <div className='info-icon'>
+                <IconButton color='primary'>
+                    <InfoIcon fontSize='small'/>
+                </IconButton>
             </div>
-            <div className="input-container__content">
-                {howToSearch == 'city' ?
-                    <>
-                        <h1>Inserisci la città</h1>
-                        <TextField
-                            id="city-name"
-                            label="Enter the city name"
-                            variant="outlined"
-                            color="primary"
-                            value={city}
-                            onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-                                setCity(event.target.value)
-                            }}
-                        />
-                    </> :
-                    <>
-                        <h1>Inserisci le coordinate</h1>
-                        <div>
-                            <div className="textfield-container">
-                                <TextField
-                                    id="lat"
-                                    label="Enter the latitude"
-                                    variant="outlined"
-                                    color="primary"
-                                    type="number"
-                                    value={lat}
-                                    error={latError != undefined}
-                                    helperText={latError}
-                                    onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-                                        setLat(parseFloat(event.target.value));
 
-                                        if (lat > 90) {
-                                            setLatError('Numero Troppo Grande')
-                                        } else if (lat < -90) {
-                                            setLatError('Numero Troppo Piccolo')
-                                        } else {
-                                            setLatError(undefined)
-                                        }
-                                    }}
-                                />
+            <div className="input-container">
+                <div className="input-container__how-to-search">
+                    <div className="input-container__how-to-search__case" onClick={() => {handleChangeHowToSearch('city')}}>
+                        <p className={howToSearch == 'city' ? 'option-selected' : ''}>City</p>
+                    </div>
+                    <div className="input-container__how-to-search__case" onClick={() => {handleChangeHowToSearch('coordinates')}}>
+                        <p className={howToSearch == 'coordinates' ? 'option-selected' : ''}>Coordinates</p>
+                    </div>
+                </div>
+                <div className="input-container__content">
+                    {howToSearch == 'city' ?
+                        <>
+                            <h1>Inserisci la città</h1>
+                            <CustomTextField
+                                id="city-name"
+                                label="Enter the city name"
+                                type="string"
+                                value={city}
+                                onClick={({value}) => {
+                                    setCity(value);
+                                }}/>
+                        </> :
+                        <>
+                            <h1>Inserisci le coordinate</h1>
+                            <div>
+                                <div className="textfield-container">
+                                    <CustomTextField
+                                        id="lat"
+                                        label="Enter the latitude"
+                                        type="number"
+                                        value={lat}
+                                        error={latError}
+                                        maxNumberValue={90}
+                                        onClick={({value, errorValue}) => {
+                                            setLat(parseFloat(value));
+                                            setLatError(errorValue)
+                                        }}/>
+                                </div>
+                                <div className="textfield-container">
+                                    <CustomTextField
+                                        id="lon"
+                                        label="Enter the longitude"
+                                        type="number"
+                                        value={lon}
+                                        error={lonError}
+                                        maxNumberValue={180}
+                                        onClick={({value, errorValue}) => {
+                                            setLon(parseFloat(value));
+                                            setLonError(errorValue)
+                                        }}/>
+                                </div>
                             </div>
-                            <div className="textfield-container">
-                                <TextField
-                                    id="lon"
-                                    label="Enter the longitude"
-                                    variant="outlined"
-                                    color="primary"
-                                    type="number"
-                                    value={lon}
-                                    error={lonError != undefined}
-                                    helperText={lonError}
-                                    onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-                                        setLon(parseFloat(event.target.value));
-                                        if (lon > 180) {
-                                            setLonError('Numero Troppo Grande')
-                                        } else if (lon < -180) {
-                                            setLonError('Numero Troppo Piccolo')
-                                        } else {
-                                            setLonError(undefined)
-                                        }
-                                    }}
-                                />
-                            </div>
-                        </div>
-                    </>
-                }
+                        </>
+                    }
+                </div>
+                <div className="send-button">
+                    <Button variant="outlined" onClick={() => {
+                        handleButtonClicked()
+                    }}>Invia</Button>
+                </div>
             </div>
-            <div className="send-button">
-                <Button variant="outlined" onClick={() => {
-                    handleButtonClicked()
-                }}>Invia</Button>
-            </div>
-        </div>
+        </>
     )
 }
 
