@@ -1,3 +1,10 @@
+.back-icon-container {
+  height: 0;
+  position: relative;
+  right: 15px;
+  bottom: 5px;
+}
+
 :root {
   --max-width: 1100px;
   --border-radius: 12px;

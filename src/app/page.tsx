@@ -1,37 +1,38 @@
 "use client"
 import './page.scss'
 import {useState} from "react";
-import {Input} from "@/components/input/input";
-import {Output} from "@/components/output/output";
+import {Input} from "@/sections/input/input";
+import {Output} from "@/sections/output/output";
 import {IHandleSearch, TSearchType} from "@/types/interfaces";
+import {Info} from "@/sections/info/info";
 
 export default function Home() {
 
     const [city, setCity] = useState<string | undefined>(undefined);
-    const [showInput, setShowInput] = useState<boolean>(true);
+    const [contentToShow, setContentToShow] = useState<'input' | 'output' | 'info'>('input');
     const [lon, setLon] = useState<number | undefined>(undefined);
     const [lat, setLat] = useState<number | undefined>(undefined);
     const [searchType, setSearchType] = useState<TSearchType>('city')
 
     const handleInputChange = ({city, lon, lat, type}: IHandleSearch) => {
         setCity(city);
-        setShowInput(false);
+        setContentToShow('output');
         setLat(lat);
         setLon(lon);
-        setSearchType(type)
+        setSearchType(type);
+        console.log(contentToShow)
     }
 
-    const handleOutputChange = (showInput: boolean) => {
-        setShowInput(showInput)
+    const changeContentToShow = (content: 'input' | 'output' | 'info') => {
+        setContentToShow(content)
     }
 
     return (
         <div className="app-container">
             <div className="app-container__content">
-                {showInput ?
-                    <Input onClick={handleInputChange}/> :
-                    <Output onBackClicked={handleOutputChange} city={city} lat={lat} lon={lon} type={searchType}/>
-                }
+                {contentToShow == 'input' && <Input onSendClick={handleInputChange} onInfoClick={() => changeContentToShow('info')}/>}
+                {contentToShow == 'output' && <Output onBackClicked={() => changeContentToShow('input')} city={city} lat={lat} lon={lon} type={searchType}/>}
+                {contentToShow == 'info' && <Info onBackClick={() => changeContentToShow('input')}/>}
             </div>
         </div>
     );

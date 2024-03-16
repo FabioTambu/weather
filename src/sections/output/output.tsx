@@ -16,7 +16,7 @@ import './output.scss'
 const appid = process.env.NEXT_PUBLIC_WEATHER_API_KEY;
 
 
-const Output = (props: IHandleSearch & { onBackClicked?: (showInput: boolean) => void }) => {
+const Output = (props: IHandleSearch & { onBackClicked: () => void }) => {
     const [data, setData] = useState<IWeatherData>();
     const [loading, setLoading] = useState<boolean>(true);
     const [localTimezone, setLocalTimezone] = useState<number>(0);
@@ -47,17 +47,12 @@ const Output = (props: IHandleSearch & { onBackClicked?: (showInput: boolean) =>
             });
     }
 
-    const handleBackClick = () => {
-
-        props.onBackClicked!(true);
-    }
-
     return (
         <>
         {loading && <Loading/>}
 
             <div className='back-icon-container'>
-                <IconButton color='inherit' onClick={() => {handleBackClick()}}>
+                <IconButton color='inherit' onClick={() => props.onBackClicked()}>
                     <ArrowBackIcon/>
                 </IconButton>
             </div>

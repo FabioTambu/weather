@@ -1,11 +1,11 @@
 import './input.scss'
-import {Button, IconButton, TextField} from "@mui/material";
+import { Button, IconButton } from "@mui/material";
 import React, { useState} from "react";
 import {IHandleSearch, TSearchType} from "@/types/interfaces";
 import InfoIcon from '@mui/icons-material/Info';
-import {CustomTextField} from "@/components/customTextfield/custom-textfield";
+import { CustomTextField } from "@/components/customTextfield/custom-textfield";
 
-const Input = ({onClick}: { onClick: (props: IHandleSearch) => void }) => {
+const Input = ({onSendClick, onInfoClick}: { onSendClick: (props: IHandleSearch) => void; onInfoClick: () => void }) => {
 
     const [city, setCity] = useState<string>('')
     const [lat, setLat] = useState<number>(0);
@@ -17,7 +17,7 @@ const Input = ({onClick}: { onClick: (props: IHandleSearch) => void }) => {
 
     const handleButtonClicked = () => {
         if (latError == undefined && lonError == undefined) {
-            onClick!({city, lat, lon, type: howToSearch});
+            onSendClick!({city, lat, lon, type: howToSearch});
         }
     }
 
@@ -31,7 +31,7 @@ const Input = ({onClick}: { onClick: (props: IHandleSearch) => void }) => {
     return (
         <>
             <div className='info-icon'>
-                <IconButton color='primary'>
+                <IconButton color='primary' onClick={() => {onInfoClick()}}>
                     <InfoIcon fontSize='small'/>
                 </IconButton>
             </div>
