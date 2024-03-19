@@ -1,5 +1,7 @@
 .app-container {
-  background-color: blue;
+  background-image: url("/image/background.png");
+  background-position: center;
+  background-size: cover;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -7,7 +9,7 @@
   height: 100vh;
 
   &__content {
-    background-color: grey;
+    background-color: rgba(112, 112, 112, 0.7);
     border-radius: 10px;
     width: 600px;
     height: 460px;

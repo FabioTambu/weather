@@ -39,10 +39,10 @@ const Input = ({onSendClick, onInfoClick}: { onSendClick: (props: IHandleSearch)
             <div className="input-container">
                 <div className="input-container__how-to-search">
                     <div className="input-container__how-to-search__case" onClick={() => {handleChangeHowToSearch('city')}}>
-                        <p className={howToSearch == 'city' ? 'option-selected' : ''}>City</p>
+                        <Button color="success" variant={howToSearch == 'city' ? "contained" : "outlined"}>City</Button>
                     </div>
                     <div className="input-container__how-to-search__case" onClick={() => {handleChangeHowToSearch('coordinates')}}>
-                        <p className={howToSearch == 'coordinates' ? 'option-selected' : ''}>Coordinates</p>
+                        <Button color="success" variant={howToSearch == 'coordinates' ? "contained" : "outlined"}>Coordinates</Button>
                     </div>
                 </div>
                 <div className="input-container__content">
@@ -56,7 +56,8 @@ const Input = ({onSendClick, onInfoClick}: { onSendClick: (props: IHandleSearch)
                                 value={city}
                                 onClick={({value}) => {
                                     setCity(value);
-                                }}/>
+                                }
+                            }/>
                         </> :
                         <>
                             <h1>Inserisci le coordinate</h1>
@@ -92,7 +93,7 @@ const Input = ({onSendClick, onInfoClick}: { onSendClick: (props: IHandleSearch)
                     }
                 </div>
                 <div className="send-button">
-                    <Button variant="outlined" onClick={() => {
+                    <Button variant="contained" onClick={() => {
                         handleButtonClicked()
                     }}>Invia</Button>
                 </div>

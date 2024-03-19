@@ -2,15 +2,22 @@
   height: 100%;
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
 
-  &__content {
+  &__title {
+    font-size: 20px;
+   margin: 20px 0 50px;
+  }
+    &__content {
 
-    & a {
-      color: lightblue;
-      text-decoration: underline;
-      font-style: italic;
-    }
+      & a {
+        color: lightblue;
+        text-decoration: underline;
+        font-style: italic;
+      }
+
+      & h3 {
+        margin: 8px 0;
+      }
   }
 }

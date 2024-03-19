@@ -11,7 +11,7 @@ const CustomTextField = (props: ICustomTextField) => {
             id={props.id}
             label={props.label}
             variant="outlined"
-            color="primary"
+            color="warning"
             type={props.type}
             value={props.value}
             error={props.error != undefined}

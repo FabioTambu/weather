@@ -5,6 +5,7 @@ import {Input} from "@/sections/input/input";
 import {Output} from "@/sections/output/output";
 import {IHandleSearch, TSearchType} from "@/types/interfaces";
 import {Info} from "@/sections/info/info";
+import { ThemeProvider, createTheme } from '@mui/material/styles';
 
 export default function Home() {
 
@@ -27,13 +28,21 @@ export default function Home() {
         setContentToShow(content)
     }
 
+    const darkTheme = createTheme({
+        palette: {
+            mode: 'dark',
+        },
+    });
+
     return (
-        <div className="app-container">
-            <div className="app-container__content">
-                {contentToShow == 'input' && <Input onSendClick={handleInputChange} onInfoClick={() => changeContentToShow('info')}/>}
-                {contentToShow == 'output' && <Output onBackClicked={() => changeContentToShow('input')} city={city} lat={lat} lon={lon} type={searchType}/>}
-                {contentToShow == 'info' && <Info onBackClick={() => changeContentToShow('input')}/>}
+        <ThemeProvider theme={darkTheme}>
+            <div className="app-container">
+                <div className="app-container__content">
+                    {contentToShow == 'input' && <Input onSendClick={handleInputChange} onInfoClick={() => changeContentToShow('info')}/>}
+                    {contentToShow == 'output' && <Output onBackClicked={() => changeContentToShow('input')} city={city} lat={lat} lon={lon} type={searchType}/>}
+                    {contentToShow == 'info' && <Info onBackClick={() => changeContentToShow('input')}/>}
+                </div>
             </div>
-        </div>
+        </ThemeProvider>
     );
 }
