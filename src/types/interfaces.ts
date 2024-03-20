@@ -17,6 +17,7 @@ export interface ICustomTextField {
     value: string | number;
     error?: string | undefined;
     maxNumberValue?: number;
+    size: 'small' | 'medium';
     onClick: (props: { value: string; errorValue?: string | undefined}) => void
 }
 

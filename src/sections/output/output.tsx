@@ -17,10 +17,12 @@ const appid = process.env.NEXT_PUBLIC_WEATHER_API_KEY;
 
 
 const Output = (props: IHandleSearch & { onBackClicked: () => void }) => {
+
     const [data, setData] = useState<IWeatherData>();
     const [loading, setLoading] = useState<boolean>(true);
     const [localTimezone, setLocalTimezone] = useState<number>(0);
     const [error, setError] = useState(false)
+    const [slideToView, setSlideToView] = useState(0)
 
     useEffect(() => {
         let weatherPayload: weatherPayload = {params: {}}
@@ -30,6 +32,14 @@ const Output = (props: IHandleSearch & { onBackClicked: () => void }) => {
             weatherPayload = {params: {'appid': appid, 'lat': props.lat, 'lon': props.lon, 'units': 'metric'}}
 
         fetchData(weatherPayload);
+
+        if(window.innerWidth > 1000) {
+            setSlideToView(4)
+        } else if (window.innerWidth > 500) {
+            setSlideToView(2)
+        } else {
+            setSlideToView(1)
+        }
     }, []);
 
     const fetchData = (payload: weatherPayload) => {
@@ -75,7 +85,7 @@ const Output = (props: IHandleSearch & { onBackClicked: () => void }) => {
 
                 <div className="output-container__future-content">
                     <Swiper
-                        slidesPerView={4.5}
+                        slidesPerView={slideToView}
                         spaceBetween={30}
                         freeMode={true}
                         modules={[ FreeMode ]}

@@ -1,18 +1,19 @@
 import './input.scss'
 import { Button, IconButton } from "@mui/material";
-import React, { useState} from "react";
+import React, { useState } from "react";
 import {IHandleSearch, TSearchType} from "@/types/interfaces";
 import InfoIcon from '@mui/icons-material/Info';
 import { CustomTextField } from "@/components/customTextfield/custom-textfield";
 
 const Input = ({onSendClick, onInfoClick}: { onSendClick: (props: IHandleSearch) => void; onInfoClick: () => void }) => {
 
+    const screenWidth = window.innerWidth;
+
     const [city, setCity] = useState<string>('')
     const [lat, setLat] = useState<number>(0);
     const [lon, setLon] = useState<number>(0);
     const [latError, setLatError] = useState<string | undefined>()
     const [lonError, setLonError] = useState<string | undefined>()
-
     const [howToSearch, setHowToSearch] = useState<TSearchType>('city')
 
     const handleButtonClicked = () => {
@@ -39,10 +40,22 @@ const Input = ({onSendClick, onInfoClick}: { onSendClick: (props: IHandleSearch)
             <div className="input-container">
                 <div className="input-container__how-to-search">
                     <div className="input-container__how-to-search__case" onClick={() => {handleChangeHowToSearch('city')}}>
-                        <Button color="success" variant={howToSearch == 'city' ? "contained" : "outlined"}>City</Button>
+                        <Button
+                            color="success"
+                            variant={howToSearch == 'city' ? "contained" : "outlined"}
+                            size={screenWidth > 400 ? 'medium' : 'small'}
+                        >
+                            City
+                        </Button>
                     </div>
                     <div className="input-container__how-to-search__case" onClick={() => {handleChangeHowToSearch('coordinates')}}>
-                        <Button color="success" variant={howToSearch == 'coordinates' ? "contained" : "outlined"}>Coordinates</Button>
+                        <Button
+                            color="success"
+                            variant={howToSearch == 'coordinates' ? "contained" : "outlined"}
+                            size={screenWidth > 400 ? 'medium' : 'small'}
+                        >
+                            {screenWidth > 600 ? 'Coordinates' : 'Coord'}
+                        </Button>
                     </div>
                 </div>
                 <div className="input-container__content">
@@ -54,6 +67,7 @@ const Input = ({onSendClick, onInfoClick}: { onSendClick: (props: IHandleSearch)
                                 label="Enter the city name"
                                 type="string"
                                 value={city}
+                                size={screenWidth > 450 ? 'medium' : 'small'}
                                 onClick={({value}) => {
                                     setCity(value);
                                 }
@@ -61,8 +75,8 @@ const Input = ({onSendClick, onInfoClick}: { onSendClick: (props: IHandleSearch)
                         </> :
                         <>
                             <h1>Inserisci le coordinate</h1>
-                            <div>
-                                <div className="textfield-container">
+                            <div className="textfield-container">
+                                <div className="textfield-container__content">
                                     <CustomTextField
                                         id="lat"
                                         label="Enter the latitude"
@@ -70,12 +84,13 @@ const Input = ({onSendClick, onInfoClick}: { onSendClick: (props: IHandleSearch)
                                         value={lat}
                                         error={latError}
                                         maxNumberValue={90}
+                                        size={screenWidth > 450 ? 'medium' : 'small'}
                                         onClick={({value, errorValue}) => {
                                             setLat(parseFloat(value));
                                             setLatError(errorValue)
                                         }}/>
                                 </div>
-                                <div className="textfield-container">
+                                <div className="textfield-container__content">
                                     <CustomTextField
                                         id="lon"
                                         label="Enter the longitude"
@@ -83,6 +98,7 @@ const Input = ({onSendClick, onInfoClick}: { onSendClick: (props: IHandleSearch)
                                         value={lon}
                                         error={lonError}
                                         maxNumberValue={180}
+                                        size={screenWidth > 450 ? 'medium' : 'small'}
                                         onClick={({value, errorValue}) => {
                                             setLon(parseFloat(value));
                                             setLonError(errorValue)

@@ -2,12 +2,12 @@ import {TextField} from "@mui/material";
 import React from "react";
 import {ICustomTextField} from "@/types/interfaces";
 
-
-
 const CustomTextField = (props: ICustomTextField) => {
 
     return (
         <TextField
+            sx={{width: '80%', maxWidth: '300px', minWidth: '172px'}}
+            size={props.size}
             id={props.id}
             label={props.label}
             variant="outlined"
