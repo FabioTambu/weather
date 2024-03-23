@@ -19,19 +19,20 @@ const appid = process.env.NEXT_PUBLIC_WEATHER_API_KEY;
 const Output = (props: IHandleSearch & { onBackClicked: () => void }) => {
 
     const [data, setData] = useState<IWeatherData>();
+    const [error, setError] = useState(false);
     const [loading, setLoading] = useState<boolean>(true);
     const [localTimezone, setLocalTimezone] = useState<number>(0);
-    const [error, setError] = useState(false)
-    const [slideToView, setSlideToView] = useState(0)
+
+    const [slideToView, setSlideToView] = useState(0);
 
     useEffect(() => {
-        let weatherPayload: weatherPayload = {params: {}}
+        let weatherPayload: weatherPayload
         if (props.type == 'city')
-            weatherPayload = {params: {'appid': appid, 'q': props.city, 'units': 'metric'}}
+            weatherPayload = {params: {'appid': appid!, 'q': props.value.city!, 'units': 'metric'}}
         if (props.type == 'coordinates')
-            weatherPayload = {params: {'appid': appid, 'lat': props.lat, 'lon': props.lon, 'units': 'metric'}}
+            weatherPayload = {params: {'appid': appid!, 'lat': props.value.lat!, 'lon': props.value.lon!, 'units': 'metric'}}
 
-        fetchData(weatherPayload);
+        fetchData(weatherPayload!);
 
         if(window.innerWidth > 1000) {
             setSlideToView(4)
@@ -40,7 +41,7 @@ const Output = (props: IHandleSearch & { onBackClicked: () => void }) => {
         } else {
             setSlideToView(1)
         }
-    }, []);
+    }, [props.type, props.value]);
 
     const fetchData = (payload: weatherPayload) => {
         axios.get('https://api.openweathermap.org/data/2.5/forecast', payload)
@@ -67,7 +68,7 @@ const Output = (props: IHandleSearch & { onBackClicked: () => void }) => {
                 </IconButton>
             </div>
 
-            {error && <div className='error-container'><h1>Si é verificato un errore</h1></div>}
+            {error && <div className='error-container'><h1>City not found, please try again</h1></div>}
 
             {data != undefined &&
 

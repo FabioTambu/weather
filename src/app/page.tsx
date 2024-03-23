@@ -11,17 +11,16 @@ export default function Home() {
 
     const [city, setCity] = useState<string | undefined>(undefined);
     const [contentToShow, setContentToShow] = useState<'input' | 'output' | 'info'>('input');
-    const [lon, setLon] = useState<number | undefined>(undefined);
-    const [lat, setLat] = useState<number | undefined>(undefined);
+    const [lon, setLon] = useState<string | undefined>(undefined);
+    const [lat, setLat] = useState<string | undefined>(undefined);
     const [searchType, setSearchType] = useState<TSearchType>('city')
 
-    const handleInputChange = ({city, lon, lat, type}: IHandleSearch) => {
-        setCity(city);
+    const handleInputChange = ({value, type}: IHandleSearch) => {
+        setCity(value.city);
         setContentToShow('output');
-        setLat(lat);
-        setLon(lon);
+        setLat(value.lat);
+        setLon(value.lon);
         setSearchType(type);
-        console.log(contentToShow)
     }
 
     const changeContentToShow = (content: 'input' | 'output' | 'info') => {
@@ -39,7 +38,7 @@ export default function Home() {
             <div className="app-container">
                 <div className="app-container__content">
                     {contentToShow == 'input' && <Input onSendClick={handleInputChange} onInfoClick={() => changeContentToShow('info')}/>}
-                    {contentToShow == 'output' && <Output onBackClicked={() => changeContentToShow('input')} city={city} lat={lat} lon={lon} type={searchType}/>}
+                    {contentToShow == 'output' && <Output onBackClicked={() => changeContentToShow('input')} value={{city: city, lat: lat, lon: lon}} type={searchType}/>}
                     {contentToShow == 'info' && <Info onBackClick={() => changeContentToShow('input')}/>}
                 </div>
             </div>

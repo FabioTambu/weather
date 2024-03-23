@@ -2,35 +2,13 @@
  * Output
  */
 
-
-export type TSearchType = 'city' | 'coordinates'
-
+type WeatherParams = {
+    appid: string;
+    units: 'metric';
+} & ({ lat: string; lon: string } | { q: string });
 
 export interface weatherPayload {
-    params: any // TODO: tipizza
-}
-
-export interface ICustomTextField {
-    id: string;
-    label: string;
-    type: 'number' | 'string';
-    value: string | number;
-    error?: string | undefined;
-    maxNumberValue?: number;
-    size: 'small' | 'medium';
-    onClick: (props: { value: string; errorValue?: string | undefined}) => void
-}
-
-export interface IHandleSearch {
-    city?: string,
-    lat?: number,
-    lon?: number,
-    type: TSearchType
-}
-
-export interface IWeatherIcon {
-    weather: string,
-    size: 'large' | 'small'
+    params: WeatherParams
 }
 
 export interface IWeatherData {
@@ -49,14 +27,42 @@ export interface IWeatherData {
             main: {
                 temp: number
             }
-            weather: [
-                {
-                    main: string,
-                    description: string,
-                    icon: string
-                }
-            ]
+            weather: [{ icon: string }]
         }
     ];
 }
 
+export interface IWeatherIcon {
+    weather: string,
+    size: 'large' | 'small'
+}
+
+/**
+ * Input
+ */
+
+export type TSearchType = 'city' | 'coordinates'
+
+export interface ICustomTextField {
+    id: string;
+    label: string;
+    type: 'number' | 'string';
+    value: string | number;
+    error: string | undefined;
+    maxNumberValue?: number;
+    size: 'small' | 'medium';
+    onChange: (props: { value: string; coordErrorValue?: string | undefined}) => void
+}
+
+/**
+ * Input & Output
+ */
+
+export interface IHandleSearch {
+    value: {
+        city?: string,
+        lat?: string,
+        lon?: string
+    }
+    type: TSearchType
+}

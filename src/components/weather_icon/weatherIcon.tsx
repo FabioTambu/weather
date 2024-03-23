@@ -26,7 +26,7 @@ const WeatherIcon = (props: IWeatherIcon) => {
         } else {
             setImageDimension(40)
         }
-    }, []);
+    }, [props.weather, props.size]);
 
 
 

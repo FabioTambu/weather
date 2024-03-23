@@ -20,17 +20,19 @@ const CustomTextField = (props: ICustomTextField) => {
                 const tempValue = event.target.value;
                 let tempError: string | undefined
 
-                if(typeof props.value === 'number') {
+                if(props.type === 'number') {
                     if (parseFloat(tempValue) > props.maxNumberValue!) {
-                        tempError = 'Numero Troppo Grande';
+                        tempError = 'Number Too Large';
                     } else if (parseFloat(tempValue) < (props.maxNumberValue! * -1)) {
-                        tempError = 'Numero Troppo Piccolo';
+                        tempError = 'Number Too Small';
+                    } else if (tempValue == '') {
+                        tempError = 'The field cannot be empty';
                     } else {
                         tempError = undefined;
                     }
-                    props.onClick!({value: tempValue, errorValue: tempError})
+                    props.onChange!({value: tempValue, coordErrorValue: tempError})
                 } else {
-                    props.onClick({value: tempValue})
+                    props.onChange({value: tempValue})
                 }
             }}
         />

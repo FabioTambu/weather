@@ -42,6 +42,30 @@
 
 }
 
+.input-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  &__how-to-search {
+    display: flex;
+    justify-content: center;
+  }
+
+  &__title {
+    display: flex;
+    justify-content: center;
+    margin: 60px 0 50px;
+    width: 100%;
+  }
+
+  &__search-button {
+    display: flex;
+    justify-content: center;
+    margin-top: 80px;
+  }
+}
+
 .textfield-container {
   width: 100%;
 
@@ -58,7 +82,7 @@
   }
 }
 
-.send-button {
+.search-button {
   width: 100%;
   display: flex;
   justify-content: center;
