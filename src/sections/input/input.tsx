@@ -23,9 +23,19 @@ const Input = ({onSendClick, onInfoClick}: { onSendClick: (props: IHandleSearch)
                 city: 'The field cannot be empty'
             }))
         } else {
-            setError(prevLocation => ({...prevLocation,
-                city: undefined
-            }))
+            setError(prevLocation => ({...prevLocation, city: undefined}))
+
+            if (value.lat == '' || value.lon == '') {
+
+                if (value.lat == '')
+                    setError(prevLocation => ({...prevLocation, lat: 'The field cannot be empty'}));
+
+                if (value.lon == '')
+                    setError(prevLocation => ({...prevLocation, lon: 'The field cannot be empty'}));
+
+                return;
+            }
+
             if (error.lat == undefined && error.lon == undefined) {
                 onSendClick!({value: value, type: howToSearch});
             }
