@@ -4,7 +4,6 @@ import React, {useEffect, useState} from "react";
 import {IHandleSearch, TSearchType} from "@/types/interfaces";
 import InfoIcon from '@mui/icons-material/Info';
 import { CustomTextField } from "@/components/customTextfield/custom-textfield";
-import {Loading} from "@/components/loading/loading";
 
 const Input = ({onSendClick, onInfoClick}: { onSendClick: (props: IHandleSearch) => void; onInfoClick: () => void }) => {
 
@@ -25,7 +24,7 @@ const Input = ({onSendClick, onInfoClick}: { onSendClick: (props: IHandleSearch)
         } else {
             setError(prevLocation => ({...prevLocation, city: undefined}))
 
-            if (value.lat == '' || value.lon == '') {
+            if ((value.lat == '' || value.lon == '') && howToSearch == 'coordinates') {
 
                 if (value.lat == '')
                     setError(prevLocation => ({...prevLocation, lat: 'The field cannot be empty'}));
