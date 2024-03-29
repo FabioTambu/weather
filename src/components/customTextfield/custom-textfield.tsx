@@ -17,24 +17,22 @@ const CustomTextField = (props: ICustomTextField) => {
             error={props.error != undefined}
             helperText={props.error}
             onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-                if(event.target.value != '') {
-                    const tempValue = event.target.value;
-                    let tempError: string | undefined
+                const tempValue = event.target.value;
+                let tempError: string | undefined
 
-                    if(props.type === 'number') {
-                        if (parseFloat(tempValue) > props.maxNumberValue!) {
-                            tempError = 'Number Too Large';
-                        } else if (parseFloat(tempValue) < (props.maxNumberValue! * -1)) {
-                            tempError = 'Number Too Small';
-                        } else if (tempValue == '') {
-                            tempError = 'The field cannot be empty';
-                        } else {
-                            tempError = undefined;
-                        }
-                        props.onChange!({value: tempValue, coordErrorValue: tempError})
+                if(props.type === 'number') {
+                    if (parseFloat(tempValue) > props.maxNumberValue!) {
+                        tempError = 'Number Too Large';
+                    } else if (parseFloat(tempValue) < (props.maxNumberValue! * -1)) {
+                        tempError = 'Number Too Small';
+                    } else if (tempValue == '') {
+                        tempError = 'The field cannot be empty';
                     } else {
-                        props.onChange({value: tempValue})
+                        tempError = undefined;
                     }
+                    props.onChange!({value: tempValue, coordErrorValue: tempError})
+                } else {
+                    props.onChange({value: tempValue})
                 }
             }}
         />
